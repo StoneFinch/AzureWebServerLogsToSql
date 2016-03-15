@@ -1,6 +1,8 @@
-﻿using Stonefinch.AzureWebServerLogsToSql.Models;
+﻿using EntityFramework.BulkInsert.Extensions;
+using Stonefinch.AzureWebServerLogsToSql.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace Stonefinch.AzureWebServerLogsToSql.Data
@@ -9,7 +11,9 @@ namespace Stonefinch.AzureWebServerLogsToSql.Data
     {
         IEnumerable<AzureWebServerLogFileInfo> GetFileInfosWithUpdates(IEnumerable<AzureWebServerLogFileInfo> fileInfos);
 
-        IEnumerable<AzureWebServerLog> InsertAzureWebServerLogs(IEnumerable<AzureWebServerLog> azureWebServerLogs);
+        IEnumerable<AzureWebServerLogFileInfo> InsertAzureWebServerLogFileInfos(IEnumerable<AzureWebServerLogFileInfo> fileInfos);
+
+        IEnumerable<AzureWebServerLog> ReplaceAllAzureWebServerLogsForFileInfoId(AzureWebServerLogFileInfo fileInfo, IEnumerable<AzureWebServerLog> azureWebServerLogs);
     }
 
     public class AzureWebServerLogRepository : IAzureWebServerLogRepository
@@ -68,9 +72,55 @@ namespace Stonefinch.AzureWebServerLogsToSql.Data
             return result;
         }
 
-        public IEnumerable<AzureWebServerLog> InsertAzureWebServerLogs(IEnumerable<AzureWebServerLog> azureWebServerLogs)
+        public IEnumerable<AzureWebServerLogFileInfo> InsertAzureWebServerLogFileInfos(IEnumerable<AzureWebServerLogFileInfo> fileInfos)
         {
-            throw new NotImplementedException();
+            if (fileInfos == null || fileInfos.Count() == 0)
+                return fileInfos;
+
+            using (var ctx = this.CreateAzureWebServerLogContext())
+            {
+                ctx.AzureWebServerLogFileInfos.AddRange(fileInfos);
+                ctx.SaveChanges();
+            }
+
+            return fileInfos;
+        }
+
+        public IEnumerable<AzureWebServerLog> ReplaceAllAzureWebServerLogsForFileInfoId(AzureWebServerLogFileInfo fileInfo, IEnumerable<AzureWebServerLog> azureWebServerLogs)
+        {
+            using (var ctx = this.CreateAzureWebServerLogContext())
+            {
+                // NOTE: bulkInsert no longer appears to work with new Database.BeginTransaction() methods
+                ////using (var trans = ctx.Database.BeginTransaction())
+                ////{
+                try
+                {
+                    // delete all existing logs
+                    ctx.Database.ExecuteSqlCommand("delete from dbo.AzureWebServerLog where AzureWebServerLogFileInfoId = @Id", new SqlParameter("@Id", fileInfo.AzureWebServerLogFileInfoId));
+
+                    // update fileInfo values
+                    var fileInfoFromDb = ctx.AzureWebServerLogFileInfos.Single(fi => fi.AzureWebServerLogFileInfoId == fileInfo.AzureWebServerLogFileInfoId);
+                    fileInfoFromDb.LastModifiedDate = fileInfo.LastModifiedDate;
+                    fileInfoFromDb.FileSize = fileInfo.FileSize;
+
+                    // insert all AzureWebServerLogs
+                    // NOTE: bulkInsert no longer appears to work with new Database.BeginTransaction() methods
+                    ctx.BulkInsert(azureWebServerLogs, 500);
+
+                    // save
+                    ctx.SaveChanges();
+
+                    ////trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while processing fileInfo: {fileInfo.AzureWebServerLogFileInfoId}; ex: {ex.ToString()}");
+
+                    ////trans.Rollback();
+                }
+            }
+
+            return azureWebServerLogs;
         }
 
         private AzureWebServerLogContext CreateAzureWebServerLogContext()
