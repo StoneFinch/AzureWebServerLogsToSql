@@ -24,6 +24,11 @@ Instead of downloading these one and a time and parsing through them, you can us
 
 You could even run this as a webjob within your app service.
 
+###Setup and Usage
+ 1. Clone the repo
+ 2. Create necessary [SQL Tables](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/scripts/create_azurelogs_tables.sql)
+ 3. Set appropriate values in [Program.cs](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/src/Stonefinch.AzureWebServerLogsToSql.Console/Program.cs#L15)
+ 4. Run console application project.
 
 ###Roadmap
  - create webjob wrapper for library
