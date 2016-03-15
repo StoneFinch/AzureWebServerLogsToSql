@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stonefinch.AzureWebServerLo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stonefinch.AzureWebServerLogsToSql.Console", "Stonefinch.AzureWebServerLogsToSql.Console\Stonefinch.AzureWebServerLogsToSql.Console.csproj", "{5F092EC3-0220-458A-A919-A2D0AB4D733A}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Stonefinch.AzureWebServerLogsToSql.Database", "Stonefinch.AzureWebServerLogsToSql.Database\Stonefinch.AzureWebServerLogsToSql.Database.sqlproj", "{F62FA8BD-0E1C-4965-A892-CBBF24FE3CD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{5F092EC3-0220-458A-A919-A2D0AB4D733A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F092EC3-0220-458A-A919-A2D0AB4D733A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F092EC3-0220-458A-A919-A2D0AB4D733A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F62FA8BD-0E1C-4965-A892-CBBF24FE3CD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F62FA8BD-0E1C-4965-A892-CBBF24FE3CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F62FA8BD-0E1C-4965-A892-CBBF24FE3CD5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F62FA8BD-0E1C-4965-A892-CBBF24FE3CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F62FA8BD-0E1C-4965-A892-CBBF24FE3CD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F62FA8BD-0E1C-4965-A892-CBBF24FE3CD5}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
