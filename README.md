@@ -6,7 +6,7 @@ If you enable File System Web Server logs for your Azure App Service...
 
 ![image](https://cloud.githubusercontent.com/assets/109249/13767635/88ef592c-ea3a-11e5-8fa3-990356ccf73e.png)
 
-You'll start to see logs on the file system for your app service here:
+...You'll start to see logs on the file system for your app service here:
 
 (you can find your FTP host and credentials in the publish profile file)
 
@@ -24,3 +24,7 @@ Instead of downloading these one and a time and parsing through them, you can us
 
 You could even run this as a webjob within your app service.
 
+
+###Roadmap
+ - create webjob wrapper for library
+ - create powershell command line script wrapper
