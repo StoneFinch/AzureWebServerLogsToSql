@@ -49,6 +49,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Stonefinch.AzureWebServerLogsToSql\Stonefinch.AzureWebServerLogsToSql.csproj">
+      <Project>{c641a0c5-5f7a-47fa-9d42-243bff10eb60}</Project>
+      <Name>Stonefinch.AzureWebServerLogsToSql</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
