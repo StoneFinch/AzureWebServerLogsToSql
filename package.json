@@ -1,0 +1,27 @@
+{
+  "name": "azurewebserverlogstosql",
+  "version": "0.0.1",
+  "description": "Parse Azure /LogFiles/http/RawLogs Web Server File System Logs to a SQL Database",
+  "main": "program.cs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stonefinch/AzureWebServerLogsToSql.git"
+  },
+  "keywords": [
+    "azure",
+    "rawlogs",
+    "http",
+    "logs",
+    "web",
+    "server"
+  ],
+  "author": "Aaron Hoffman <hoffman.aaron.d@gmail.com> (http://stonefinch.com)",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/Stonefinch/AzureWebServerLogsToSql/issues"
+  },
+  "homepage": "https://github.com/Stonefinch/AzureWebServerLogsToSql#readme"
+}
