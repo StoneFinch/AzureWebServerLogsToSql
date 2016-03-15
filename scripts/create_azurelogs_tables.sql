@@ -13,16 +13,6 @@ SET NUMERIC_ROUNDABORT OFF;
 
 
 GO
-:setvar DatabaseName "azurelogs"
-
-GO
-:on error exit
-
-GO
-USE [$(DatabaseName)];
-
-
-GO
 PRINT N'Creating [dbo].[AzureWebServerLog]...';
 
 
@@ -32,17 +22,17 @@ CREATE TABLE [dbo].[AzureWebServerLog] (
     [AzureWebServerLogFileInfoId] INT            NOT NULL,
     [LogFileRowNumber]            INT            NOT NULL,
     [datetime]                    DATETIME2 (2)  NULL,
-    [s_sitename]                  VARCHAR (200)  NULL,
+    [s_sitename]                  VARCHAR (400)  NULL,
     [cs_method]                   CHAR (6)       NULL,
     [cs_uri_stem]                 VARCHAR (400)  NULL,
     [cs_uri_query]                NVARCHAR (MAX) NULL,
     [s_port]                      CHAR (6)       NULL,
-    [cs_username]                 VARCHAR (200)  NULL,
+    [cs_username]                 VARCHAR (400)  NULL,
     [c_ip]                        VARCHAR (50)   NULL,
-    [cs_User_Agent]               VARCHAR (400)  NULL,
+    [cs_User_Agent]               VARCHAR (MAX)  NULL,
     [cs_Cookie]                   NVARCHAR (MAX) NULL,
-    [cs_Referer]                  VARCHAR (400)  NULL,
-    [cs_host]                     VARCHAR (200)  NULL,
+    [cs_Referer]                  VARCHAR (MAX)  NULL,
+    [cs_host]                     VARCHAR (400)  NULL,
     [sc_status]                   CHAR (6)       NULL,
     [sc_substatus]                CHAR (6)       NULL,
     [sc_win32_status]             CHAR (6)       NULL,
@@ -90,9 +80,6 @@ GO
 PRINT N'Checking existing data against newly created constraints';
 
 
-GO
-USE [$(DatabaseName)];
-
 
 GO
 ALTER TABLE [dbo].[AzureWebServerLog] WITH CHECK CHECK CONSTRAINT [FK_AzureWebServerLog_AzureWebServerLogFileInfo];
@@ -103,8 +90,9 @@ CREATE NONCLUSTERED INDEX [IX_AzureWebServerLogFileInfo_FileNameAndPath]
     ON [dbo].[AzureWebServerLogFileInfo]([FileNameAndPath] ASC);
 
 
+
+
+
 GO
-PRINT N'Update complete.';
-
-
+PRINT N'Done';
 GO
