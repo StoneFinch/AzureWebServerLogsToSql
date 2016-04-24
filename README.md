@@ -27,9 +27,9 @@ You could even run this as a webjob within your app service.
 ###Setup and Usage
  1. Clone the repo
  2. Create necessary [SQL Tables](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/scripts/create_azurelogs_tables.sql)
- 3. Set appropriate values in [Program.cs](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/src/Stonefinch.AzureWebServerLogsToSql.Console/Program.cs#L15)
- 4. Run console application project.
+ 3. Set appropriate values in [AppSettings.config](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/src/Stonefinch.AzureWebServerLogsToSql.Web/AppSettings.config) and [ConnectionStrings.config](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/src/Stonefinch.AzureWebServerLogsToSql.Web/ConnectionStrings.config)
+  - note: The AppSettings.config and ConnectionStrings.config files are [referenced by the console application](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/src/Stonefinch.AzureWebServerLogsToSql.Console/Stonefinch.AzureWebServerLogsToSql.Console.csproj#L60) as Linked Files. Update the vaules in the Web project, and after a successful build they will be included in the Console project's build output directory.
+ 4. Run console application project OR deploy Web Project to Azure Web App/App Service (the console app is [defined as a WebJob](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/src/Stonefinch.AzureWebServerLogsToSql.Web/Properties/webjobs-list.json) and will be deployed with the Web project, and is [scheduled to run every 15 minutes](https://github.com/StoneFinch/AzureWebServerLogsToSql/blob/master/src/Stonefinch.AzureWebServerLogsToSql.Console/Properties/webjob-publish-settings.json)).
 
 ###Roadmap
- - create webjob wrapper for library
- - create powershell command line script wrapper
+ - currently empty
