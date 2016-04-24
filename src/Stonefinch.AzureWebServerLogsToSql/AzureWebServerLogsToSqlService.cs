@@ -37,14 +37,15 @@ namespace Stonefinch.AzureWebServerLogsToSql
 
         public void SyncLogs()
         {
-            var ftpClient = this.CreateFtpClient();
+            Console.WriteLine("Syncing Logs.");
 
-            ftpClient.Connect();
-
-            var ftpFilesInfos = ftpClient.GetListing(this.FtpWebServerLogPath);
+            var ftpFilesInfos = this.GetFtpListItems();
 
             // find all file infos that potentially contain new data
+            Console.WriteLine("Determining files that have updates.");
             var azureWebServerLogFileInfosWithUpdates = this.GetWebServerLogFileInfosWithUpdates(ftpFilesInfos);
+
+            Console.WriteLine("Files with updates: " + azureWebServerLogFileInfosWithUpdates.Count().ToString());
 
             // insert all file infos we have not seen before (id = 0)
             // TODO: if there is a failure on the first bulk insert of log data, and the file never changes, manual cleanup will be required, since these logs will be filtered out of future runs
@@ -54,11 +55,36 @@ namespace Stonefinch.AzureWebServerLogsToSql
                         .Where(fi => fi.AzureWebServerLogFileInfoId == 0)
                         .ToList());
 
+            Console.WriteLine("Updating SQL log table for files with updates.");
+
             // TODO: parallel
             foreach (var fileInfo in azureWebServerLogFileInfosWithUpdates)
             {
-                this.UpdateAzureWebServerLogsForAzureWebServerLogFileInfo(ftpClient, fileInfo);
+                try
+                {
+                    Console.WriteLine($"Updating for: {fileInfo.FileNameAndPath}; {fileInfo.LastModifiedDate.ToString("s")}; {fileInfo.FileSize}.");
+                    this.UpdateAzureWebServerLogsForAzureWebServerLogFileInfo(fileInfo);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception while processing file: {fileInfo.FileNameAndPath}; {ex.ToString()}");
+                }
             }
+
+            Console.WriteLine("Sync logs complete.");
+        }
+
+        private IEnumerable<FtpListItem> GetFtpListItems()
+        {
+            Console.WriteLine("Connecting to FTP Server.");
+            var ftpClient = this.CreateFtpClient();
+
+            ftpClient.Connect();
+
+            Console.WriteLine("Getting file listing from FTP Server.");
+            var ftpFilesInfos = ftpClient.GetListing(this.FtpWebServerLogPath).OrderBy(x => x.Modified).ToList();
+
+            return ftpFilesInfos;
         }
 
         private FtpClient CreateFtpClient()
@@ -74,7 +100,7 @@ namespace Stonefinch.AzureWebServerLogsToSql
             return ftpClient;
         }
 
-        private IEnumerable<AzureWebServerLogFileInfo> GetWebServerLogFileInfosWithUpdates(FtpListItem[] allFtpListItems)
+        private IEnumerable<AzureWebServerLogFileInfo> GetWebServerLogFileInfosWithUpdates(IEnumerable<FtpListItem> allFtpListItems)
         {
             var fileInfos = this.MapFtpListItemToAzureWebServerLogFileInfos(allFtpListItems);
 
@@ -100,10 +126,16 @@ namespace Stonefinch.AzureWebServerLogsToSql
             return result;
         }
 
-        private void UpdateAzureWebServerLogsForAzureWebServerLogFileInfo(FtpClient ftpClient, AzureWebServerLogFileInfo fileInfo)
+        private void UpdateAzureWebServerLogsForAzureWebServerLogFileInfo(AzureWebServerLogFileInfo fileInfo)
         {
+            var ftpClient = this.CreateFtpClient();
+            ftpClient.Connect();
+
             // retrieve file content
+            Console.WriteLine("Retrieving File Content from FTP Server.");
             var fileContent = this.GetFileContent(ftpClient, fileInfo.FileNameAndPath);
+
+            Console.WriteLine("File Content retrieved. Parsing file.");
 
             // remove entire first line and "#Fields: " prefix of header row
             var headerRowStartIndex = fileContent.IndexOf(@"#Fields: ");
@@ -116,7 +148,9 @@ namespace Stonefinch.AzureWebServerLogsToSql
 
             var azureWebServerLogs = this.MapDataTableToAzureWebServerLogs(dt, fileInfo.AzureWebServerLogFileInfoId);
 
+            Console.WriteLine($"File parsed. Records found: {azureWebServerLogs.Count().ToString()}. Updating SQL Table.");
             this.AzureWebServerLogRepository.ReplaceAllAzureWebServerLogsForFileInfoId(fileInfo, azureWebServerLogs);
+            Console.WriteLine($"SQL Update complete.");
         }
 
         private string GetFileContent(FtpClient ftpClient, string fileNameAndPath)

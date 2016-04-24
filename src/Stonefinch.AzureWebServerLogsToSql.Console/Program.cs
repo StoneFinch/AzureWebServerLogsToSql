@@ -1,4 +1,5 @@
 ﻿using Stonefinch.AzureWebServerLogsToSql.Data;
+using System;
 using System.Configuration;
 
 namespace Stonefinch.AzureWebServerLogsToSql.Console
@@ -7,6 +8,8 @@ namespace Stonefinch.AzureWebServerLogsToSql.Console
     {
         static void Main(string[] args)
         {
+            System.Console.WriteLine("AzureWebServerLogsToSql start " + DateTime.UtcNow.ToString("s"));
+
             // note: get these values from your publishprofile file and update the AppSettings.config file
             // ex: {REPLACE-ME}.ftp.azurewebsites.windows.net
             var ftpHost = ConfigurationManager.AppSettings["FtpHost"];
@@ -29,6 +32,8 @@ namespace Stonefinch.AzureWebServerLogsToSql.Console
                 repository);
 
             service.SyncLogs();
+
+            System.Console.WriteLine("AzureWebServerLogsToSql end " + DateTime.UtcNow.ToString("s"));
         }
     }
 }
