@@ -1,9 +1,5 @@
 ﻿using Stonefinch.AzureWebServerLogsToSql.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Stonefinch.AzureWebServerLogsToSql.Console
 {
@@ -11,15 +7,17 @@ namespace Stonefinch.AzureWebServerLogsToSql.Console
     {
         static void Main(string[] args)
         {
-            // note: get these values from your publishprofile file
-            var ftpHost = @"{REPLACE-ME}.ftp.azurewebsites.windows.net";
-            var ftpUserName = @"";
-            var ftpPassword = @"";
+            // note: get these values from your publishprofile file and update the AppSettings.config file
+            // ex: {REPLACE-ME}.ftp.azurewebsites.windows.net
+            var ftpHost = ConfigurationManager.AppSettings["FtpHost"];
+            var ftpUserName = ConfigurationManager.AppSettings["FtpUserName"];
+            var ftpPassword = ConfigurationManager.AppSettings["FtpPassword"];
 
-            var ftpWebServerLogPath = @"/LogFiles/http/RawLogs/";
+            // ex: /LogFiles/http/RawLogs/
+            var ftpWebServerLogPath = ConfigurationManager.AppSettings["FtpWebServerLogPath"];
 
             // ex: "Server=.;Database=azurelogs;Integrated Security=SSPI;Connection Timeout=30;"
-            var sqlConnectionString = "";
+            var sqlConnectionString = ConfigurationManager.ConnectionStrings["AzureLogSqlConnection"].ConnectionString;
 
             var repository = new AzureWebServerLogRepository(sqlConnectionString);
 

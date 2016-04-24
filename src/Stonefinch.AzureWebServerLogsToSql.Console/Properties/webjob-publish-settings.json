@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "AzureWebServerLogsToSql",
+  "startTime": "2016-04-24T00:00:00-06:00",
+  "endTime": null,
+  "jobRecurrenceFrequency": "Minute",
+  "interval": 15,
+  "runMode": "Scheduled"
+}
