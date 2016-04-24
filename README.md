@@ -33,3 +33,8 @@ You could even run this as a webjob within your app service.
 
 ###Roadmap
  - currently empty
+
+
+###Other Potentially Helpful Links
+ - [Blog post on this project](http://aaron-hoffman.blogspot.com/2016/03/azure-http-web-server-logs-to-sql.html)
+ - [LogParser by Microsoft](https://blogs.msdn.microsoft.com/friis/2014/02/06/how-to-analyse-iis-logs-using-logparser-logparser-studio/)
