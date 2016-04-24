@@ -1,6 +1,6 @@
 {
   "name": "azurewebserverlogstosql",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Parse Azure /LogFiles/http/RawLogs Web Server File System Logs to a SQL Database",
   "main": "program.cs",
   "scripts": {
@@ -12,11 +12,9 @@
   },
   "keywords": [
     "azure",
-    "rawlogs",
-    "http",
-    "logs",
-    "web",
-    "server"
+    "webapp",
+    "appservice",
+    "logs"
   ],
   "author": "Aaron Hoffman <hoffman.aaron.d@gmail.com> (http://stonefinch.com)",
   "license": "SEE LICENSE IN LICENSE",
