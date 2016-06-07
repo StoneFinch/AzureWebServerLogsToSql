@@ -5,7 +5,7 @@
         LogFileRowNumber int not null,
         [datetime] datetime2(2) null,
         s_sitename varchar(400) null,
-        cs_method VARCHAR(7) null,
+        cs_method VARCHAR(15) null,
         cs_uri_stem varchar(400) null,
         cs_uri_query nvarchar(max) null,
         s_port char(6) null,
