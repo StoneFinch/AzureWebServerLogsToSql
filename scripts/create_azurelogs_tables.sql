@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[AzureWebServerLog] (
     [LogFileRowNumber]            INT            NOT NULL,
     [datetime]                    DATETIME2 (2)  NULL,
     [s_sitename]                  VARCHAR (400)  NULL,
-    [cs_method]                   CHAR (6)       NULL,
+    [cs_method]                   VARCHAR (7)    NULL,
     [cs_uri_stem]                 VARCHAR (400)  NULL,
     [cs_uri_query]                NVARCHAR (MAX) NULL,
     [s_port]                      CHAR (6)       NULL,
