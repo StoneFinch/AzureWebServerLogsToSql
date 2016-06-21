@@ -27,3 +27,7 @@
 GO
 
 CREATE INDEX [IX_AzureWebServerLog_AzureWebServerLogFileInfoId] ON [dbo].[AzureWebServerLog] (AzureWebServerLogFileInfoId)
+
+GO
+
+CREATE INDEX [IX_AzureWebServerLog_FileInfoId_LogFileRowNumber] ON [dbo].[AzureWebServerLog] (AzureWebServerLogFileInfoId, LogFileRowNumber)
