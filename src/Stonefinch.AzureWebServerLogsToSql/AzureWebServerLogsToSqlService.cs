@@ -119,7 +119,7 @@ namespace Stonefinch.AzureWebServerLogsToSql
                         FileNameAndPath = li.FullName,
                         FileName = li.Name,
                         FileSize = li.Size,
-                        LastModifiedDate = li.Modified
+                        LastModifiedDate = li.Modified.ToUniversalTime()
                     })
                 .ToList();
 
@@ -144,12 +144,16 @@ namespace Stonefinch.AzureWebServerLogsToSql
             // File is space delimited. Replace all `,` with `_` and then replace all ` ` with `,`
             fileContent = fileContent.Replace(",", "_").Replace(" ", ",");
 
+            // Note: performing a "sync" with the database (delete all and re-insert) was causing indexes to quickly become fragmented.
+            // We now assume IIS writes to the file in an append-only pattern.
+            // We should maintain the order of the rows from the flat file when we parse and insert the data into the DB.
+            // We'll match the records from the flat file to the records in the AzureWebServerLog DB table by the AzureWebServerLogFileInfoId and LogFileRowNumber columns.
+            // We'll only insert records from the flat file that do not already have a match in the DB.
             var dt = DataTable.New.ReadFromString(fileContent);
-
             var azureWebServerLogs = this.MapDataTableToAzureWebServerLogs(dt, fileInfo.AzureWebServerLogFileInfoId);
 
             Console.WriteLine($"File parsed. Records found: {azureWebServerLogs.Count().ToString()}. Updating SQL Table.");
-            this.AzureWebServerLogRepository.ReplaceAllAzureWebServerLogsForFileInfoId(fileInfo, azureWebServerLogs);
+            this.AzureWebServerLogRepository.InsertNewAzureWebServerLogsForFileInfoId(fileInfo, azureWebServerLogs);
             Console.WriteLine($"SQL Update complete.");
         }
 
@@ -171,11 +175,12 @@ namespace Stonefinch.AzureWebServerLogsToSql
 
         private IEnumerable<AzureWebServerLog> MapDataTableToAzureWebServerLogs(MutableDataTable logfile, int azureWebServerLogFileInfoId)
         {
+            // Note: must maintain order of records in the MutableDataTable 
+
             var result = new List<AzureWebServerLog>();
 
             var rows = logfile.Rows.ToList();
-
-            // TODO: parallel
+            
             for (int i = 0; i < rows.Count; i++)
             {
                 var wsl = rows[i];

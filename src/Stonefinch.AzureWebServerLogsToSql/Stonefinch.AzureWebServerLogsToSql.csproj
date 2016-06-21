@@ -68,6 +68,7 @@
     <Compile Include="AzureWebServerLogsToSqlService.cs" />
     <Compile Include="Data\AzureWebServerLogContext.cs" />
     <Compile Include="Data\AzureWebServerLogRepository.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="Models\AzureWebServerLog.cs" />
     <Compile Include="Models\AzureWebServerLogFileInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
