@@ -1,6 +1,5 @@
 ﻿using Stonefinch.AzureWebServerLogsToSql.Data;
 using System;
-using System.Configuration;
 
 namespace Stonefinch.AzureWebServerLogsToSql.Console
 {
@@ -8,19 +7,21 @@ namespace Stonefinch.AzureWebServerLogsToSql.Console
     {
         static void Main(string[] args)
         {
+            var azureConfig = new AzureConfiguration();
+
             System.Console.WriteLine("AzureWebServerLogsToSql start " + DateTime.UtcNow.ToString("s"));
 
             // note: get these values from your publishprofile file and update the AppSettings.config file
             // ex: {REPLACE-ME}.ftp.azurewebsites.windows.net
-            var ftpHost = ConfigurationManager.AppSettings["FtpHost"];
-            var ftpUserName = ConfigurationManager.AppSettings["FtpUserName"];
-            var ftpPassword = ConfigurationManager.AppSettings["FtpPassword"];
+            var ftpHost = azureConfig.GetAppSetting("FtpHost");
+            var ftpUserName = azureConfig.GetAppSetting("FtpUserName");
+            var ftpPassword = azureConfig.GetAppSetting("FtpPassword");
 
             // ex: /LogFiles/http/RawLogs/
-            var ftpWebServerLogPath = ConfigurationManager.AppSettings["FtpWebServerLogPath"];
+            var ftpWebServerLogPath = azureConfig.GetAppSetting("FtpWebServerLogPath");
 
             // ex: "Server=.;Database=azurelogs;Integrated Security=SSPI;Connection Timeout=30;"
-            var sqlConnectionString = ConfigurationManager.ConnectionStrings["AzureLogSqlConnection"].ConnectionString;
+            var sqlConnectionString = azureConfig.GetConnectionString("AzureLogSqlConnection");
 
             var repository = new AzureWebServerLogRepository(sqlConnectionString);
 
